@@ -27,7 +27,7 @@ datasource db {
 // }
 
 model Post {
-  id             Int          @id
+  id             Int          @id @default(autoincrement())
   user_id        String
   title          String
   content        String
@@ -47,7 +47,7 @@ model Post {
 }
 
 model Tag {
-  id         Int        @id
+  id         Int        @id @default(autoincrement())
   name       String     @unique
   color      String     @default("#000000")
   created_at DateTime   @default(now())
@@ -55,7 +55,7 @@ model Tag {
 }
 
 model Post_tag {
-  id      Int @id
+  id      Int @id @default(autoincrement())
   post_id Int
   tag_id  Int
 
@@ -66,7 +66,7 @@ model Post_tag {
 }
 
 model Like {
-  id         Int      @id
+  id         Int      @id @default(autoincrement())
   user_id    String   @default(uuid())
   post_id    Int
   created_at DateTime @default(now())
@@ -78,7 +78,7 @@ model Like {
 }
 
 model Follow {
-  id           Int      @id
+  id           Int      @id @default(autoincrement())
   follower_id  String   @default(uuid())
   following_id String   @default(uuid())
   created_at   DateTime @default(now())
@@ -90,7 +90,7 @@ model Follow {
 }
 
 model Bookmark {
-  id         Int      @id
+  id         Int      @id @default(autoincrement())
   user_id    String   @default(uuid())
   post_id    Int
   created_at DateTime @default(now())
@@ -102,7 +102,7 @@ model Bookmark {
 }
 
 model Notification {
-  id         Int      @id
+  id         Int      @id @default(autoincrement())
   user_id    String   @default(uuid())
   type       String
   data       Json?
@@ -113,7 +113,7 @@ model Notification {
 }
 
 model Post_image {
-  id          Int      @id
+  id          Int      @id @default(autoincrement())
   post_id     Int
   user_id     String   @default(uuid())
   url         String
@@ -128,7 +128,7 @@ model Post_image {
 }
 
 model Comment {
-  id             Int      @id
+  id             Int      @id @default(autoincrement())
   post_id        Int
   user_id        String   @default(uuid())
   parent_comment Int?
@@ -144,7 +144,7 @@ model Comment {
 }
 
 model Comment_like {
-  id         Int      @id
+  id         Int      @id @default(autoincrement())
   user_id    String   @default(uuid())
   comment_id Int
   created_at DateTime @default(now())

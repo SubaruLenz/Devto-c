@@ -5,37 +5,52 @@ import { useState } from "react";
 import { api } from "~/trpc/react";
 
 export function LatestPost() {
-  const [latestPost] = api.post.getLatest.useSuspenseQuery();
+  const { data: myPosts } = api.posts.getMyPosts.useQuery();
+  const latestPost = myPosts?.[0];
 
   const utils = api.useUtils();
-  const [name, setName] = useState("");
-  const createPost = api.post.create.useMutation({
+  const [title, setTitle] = useState("");
+  const [content, setContent] = useState("");
+  const createPost = api.posts.create.useMutation({
     onSuccess: async () => {
-      await utils.post.invalidate();
-      setName("");
+      await utils.posts.invalidate();
+      setTitle("");
+      setContent("");
     },
   });
 
   return (
     <div className="w-full max-w-xs">
       {latestPost ? (
-        <p className="truncate">Your most recent post: {latestPost.name}</p>
+        <p className="truncate">Your most recent post: {latestPost.title}</p>
       ) : (
         <p>You have no posts yet.</p>
       )}
       <form
         onSubmit={(e) => {
           e.preventDefault();
-          createPost.mutate({ name });
+          createPost.mutate({ 
+            title, 
+            content, 
+            slug: title.toLowerCase().replace(/\s+/g, '-'),
+            published: true 
+          });
         }}
         className="flex flex-col gap-2"
       >
         <input
           type="text"
           placeholder="Title"
-          value={name}
-          onChange={(e) => setName(e.target.value)}
+          value={title}
+          onChange={(e) => setTitle(e.target.value)}
           className="w-full rounded-full bg-white/10 px-4 py-2 text-white"
+        />
+        <textarea
+          placeholder="Content"
+          value={content}
+          onChange={(e) => setContent(e.target.value)}
+          className="w-full rounded bg-white/10 px-4 py-2 text-white"
+          rows={3}
         />
         <button
           type="submit"

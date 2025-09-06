@@ -1,29 +1,103 @@
-# Create T3 App
+# Dev.to Clone
 
-This is a [T3 Stack](https://create.t3.gg/) project bootstrapped with `create-t3-app`.
+A full-stack dev.to clone built with the T3 Stack (Next.js, tRPC, Prisma, NextAuth).
 
-## What's next? How do I make an app with this?
+## Tech Stack
 
-We try to keep this project as simple as possible, so you can start with just the scaffolding we set up for you, and add additional things later when they become necessary.
+- [Next.js](https://nextjs.org) - React framework
+- [tRPC](https://trpc.io) - End-to-end typesafe APIs
+- [Prisma](https://prisma.io) - Database ORM
+- [NextAuth.js](https://next-auth.js.org) - Authentication
+- [Tailwind CSS](https://tailwindcss.com) - Styling
+- PostgreSQL - Database
 
-If you are not familiar with the different technologies used in this project, please refer to the respective docs. If you still are in the wind, please join our [Discord](https://t3.gg/discord) and ask for help.
+## API Endpoints
 
-- [Next.js](https://nextjs.org)
-- [NextAuth.js](https://next-auth.js.org)
-- [Prisma](https://prisma.io)
-- [Drizzle](https://orm.drizzle.team)
-- [Tailwind CSS](https://tailwindcss.com)
-- [tRPC](https://trpc.io)
+### Posts (`api.posts.*`)
 
-## Learn More
+**Queries (Read)**
+- `getAll({ limit?, cursor? })` - Get paginated posts
+- `getById({ id })` - Get single post with comments
+- `getMyPosts()` - Get current user's posts (auth required)
 
-To learn more about the [T3 Stack](https://create.t3.gg/), take a look at the following resources:
+**Mutations (Write)**
+- `create({ title, content, slug, published? })` - Create post (auth required)
+- `update({ id, title?, content?, slug?, published? })` - Update own post (auth required)
+- `delete({ id })` - Delete own post (auth required)
+- `toggleLike({ postId })` - Like/unlike post (auth required)
 
-- [Documentation](https://create.t3.gg/)
-- [Learn the T3 Stack](https://create.t3.gg/en/faq#what-learning-resources-are-currently-available) — Check out these awesome tutorials
+### Comments (`api.comments.*`)
 
-You can check out the [create-t3-app GitHub repository](https://github.com/t3-oss/create-t3-app) — your feedback and contributions are welcome!
+**Queries**
+- `getByPost({ postId })` - Get comments for a post (includes replies)
 
-## How do I deploy this?
+**Mutations**
+- `create({ postId, content, parentComment? })` - Add comment/reply (auth required)
+- `update({ id, content })` - Edit own comment (auth required)
+- `delete({ id })` - Delete own comment (auth required)
+- `toggleLike({ commentId })` - Like/unlike comment (auth required)
 
-Follow our deployment guides for [Vercel](https://create.t3.gg/en/deployment/vercel), [Netlify](https://create.t3.gg/en/deployment/netlify) and [Docker](https://create.t3.gg/en/deployment/docker) for more information.
+### Tags (`api.tags.*`)
+
+**Queries**
+- `getAll()` - Get all tags with post counts
+- `getPopular({ limit? })` - Get popular tags
+- `getById({ id })` - Get tag with associated posts
+
+**Mutations**
+- `create({ name, color? })` - Create tag (auth required)
+- `update({ id, name?, color? })` - Update tag (auth required)
+- `delete({ id })` - Delete tag (auth required)
+- `addToPost({ postId, tagId })` - Tag a post (auth required)
+- `removeFromPost({ postId, tagId })` - Remove tag from post (auth required)
+
+### Users (`api.users.*`)
+
+**Queries**
+- `getProfile()` - Get current user profile (auth required)
+- `getByUsername({ username })` - Get user by username
+- `getFollowers({ userId })` - Get user's followers
+- `getFollowing({ userId })` - Get who user follows
+- `getBookmarks()` - Get current user's bookmarks (auth required)
+
+**Mutations**
+- `updateProfile({ name?, bio?, website_url?, location?, available_for? })` - Update profile (auth required)
+- `toggleFollow({ userId })` - Follow/unfollow user (auth required)
+- `toggleBookmark({ postId })` - Bookmark/unbookmark post (auth required)
+
+## Usage Examples
+
+```typescript
+// In React components
+const { data: posts } = api.posts.getAll.useQuery({ limit: 10 });
+const createPost = api.posts.create.useMutation();
+
+// Create a post
+await createPost.mutateAsync({
+  title: "My First Post",
+  content: "Hello world!",
+  slug: "my-first-post",
+  published: true
+});
+
+// Like a post
+const toggleLike = api.posts.toggleLike.useMutation();
+await toggleLike.mutateAsync({ postId: 1 });
+```
+
+## Development
+
+```bash
+npm run dev          # Start development server
+npm run db:push      # Push schema changes to database
+npm run db:studio    # Open Prisma Studio
+```
+
+## Database Schema
+
+See `prisma/schema.prisma` for the complete database schema including:
+- Users with profiles and social features
+- Posts with content, tags, and engagement
+- Comments with nested replies
+- Likes, follows, and bookmarks
+- Tags and post categorization

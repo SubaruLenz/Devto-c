@@ -5,12 +5,13 @@ import { auth } from "~/server/auth";
 import { api, HydrateClient } from "~/trpc/server";
 
 export default async function Home() {
-  const hello = await api.post.hello({ text: "from tRPC" });
   const session = await auth();
 
+  // Prefetch posts for better performance
   if (session?.user) {
-    void api.post.getLatest.prefetch();
+    void api.posts.getMyPosts.prefetch();
   }
+  void api.posts.getAll.prefetch({ limit: 10 });
 
   return (
     <HydrateClient>
@@ -45,7 +46,7 @@ export default async function Home() {
           </div>
           <div className="flex flex-col items-center gap-2">
             <p className="text-2xl text-white">
-              {hello ? hello.greeting : "Loading tRPC query..."}
+              Welcome to Dev.to Clone!
             </p>
 
             <div className="flex flex-col items-center justify-center gap-4">
