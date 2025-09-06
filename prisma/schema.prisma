@@ -2,73 +2,231 @@
 // learn more about it in the docs: https://pris.ly/d/prisma-schema
 
 generator client {
-    provider = "prisma-client-js"
+  provider = "prisma-client-js"
 }
 
 datasource db {
-    provider = "postgresql"
-    // NOTE: When using mysql or sqlserver, uncomment the @db.Text annotations in model Account below
-    // Further reading:
-    // https://next-auth.js.org/adapters/prisma#create-the-prisma-schema
-    // https://www.prisma.io/docs/reference/api-reference/prisma-schema-reference#string
-    url      = env("DATABASE_URL")
+  provider = "postgresql"
+  // NOTE: When using mysql or sqlserver, uncomment the @db.Text annotations in model Account below
+  // Further reading:
+  // https://next-auth.js.org/adapters/prisma#create-the-prisma-schema
+  // https://www.prisma.io/docs/reference/api-reference/prisma-schema-reference#string
+  url      = env("DATABASE_URL")
 }
+
+// model Post {
+//     id        Int      @id @default(autoincrement())
+//     name      String
+//     createdAt DateTime @default(now())
+//     updatedAt DateTime @updatedAt
+// 
+//     createdBy   User   @relation(fields: [createdById], references: [id])
+//     createdById String
+// 
+//     @@index([name])
+// }
 
 model Post {
-    id        Int      @id @default(autoincrement())
-    name      String
-    createdAt DateTime @default(now())
-    updatedAt DateTime @updatedAt
+  id             Int          @id
+  user_id        String
+  title          String
+  content        String
+  slug           String       @unique
+  published      Boolean?     @default(false)
+  likes_count    Int?         @default(0)
+  comments_count Int?         @default(0)
+  created_at     DateTime     @default(now())
+  updated_at     DateTime     @default(now())
+  Comment        Comment[]
+  Post_image     Post_image[]
 
-    createdBy   User   @relation(fields: [createdById], references: [id])
-    createdById String
-
-    @@index([name])
+  like_post    Like[]     @relation("PostToLike")
+  user_post_fk User       @relation(fields: [user_id], references: [id], onDelete: Cascade)
+  Post_tag     Post_tag[]
+  Bookmark     Bookmark[]
 }
 
-// Necessary for Next auth
-model Account {
-    id                       String  @id @default(cuid())
-    userId                   String
-    type                     String
-    provider                 String
-    providerAccountId        String
-    refresh_token            String? // @db.Text
-    access_token             String? // @db.Text
-    expires_at               Int?
-    token_type               String?
-    scope                    String?
-    id_token                 String? // @db.Text
-    session_state            String?
-    user                     User    @relation(fields: [userId], references: [id], onDelete: Cascade)
-    refresh_token_expires_in Int?
+model Tag {
+  id         Int        @id
+  name       String     @unique
+  color      String     @default("#000000")
+  created_at DateTime   @default(now())
+  Post_tag   Post_tag[]
+}
 
-    @@unique([provider, providerAccountId])
+model Post_tag {
+  id      Int @id
+  post_id Int
+  tag_id  Int
+
+  post_tag_post_fk Post @relation(fields: [post_id], references: [id], onDelete: Cascade)
+  post_tag_tag_fk  Tag  @relation(fields: [tag_id], references: [id], onDelete: Cascade)
+
+  @@index([post_id, tag_id])
+}
+
+model Like {
+  id         Int      @id
+  user_id    String   @default(uuid())
+  post_id    Int
+  created_at DateTime @default(now())
+
+  like_user_fk User @relation("UserLikePost", fields: [user_id], references: [id], onDelete: Cascade)
+  like_post_fk Post @relation("PostToLike", fields: [post_id], references: [id], onDelete: Cascade)
+
+  @@index([user_id, post_id])
+}
+
+model Follow {
+  id           Int      @id
+  follower_id  String   @default(uuid())
+  following_id String   @default(uuid())
+  created_at   DateTime @default(now())
+
+  follow_follower_fk  User @relation("Follower", fields: [follower_id], references: [id], onDelete: Cascade)
+  follow_following_fk User @relation("Following", fields: [following_id], references: [id], onDelete: Cascade)
+
+  @@index([follower_id, following_id])
+}
+
+model Bookmark {
+  id         Int      @id
+  user_id    String   @default(uuid())
+  post_id    Int
+  created_at DateTime @default(now())
+
+  bookmark_user_fk User @relation(fields: [user_id], references: [id], onDelete: Cascade)
+  bookmark_post_fk Post @relation(fields: [post_id], references: [id], onDelete: Cascade)
+
+  @@index([user_id, post_id])
+}
+
+model Notification {
+  id         Int      @id
+  user_id    String   @default(uuid())
+  type       String
+  data       Json?
+  read       Boolean  @default(false)
+  created_at DateTime @default(now())
+
+  notification_user_fk User @relation(fields: [user_id], references: [id], onDelete: Cascade)
+}
+
+model Post_image {
+  id          Int      @id
+  post_id     Int
+  user_id     String   @default(uuid())
+  url         String
+  key         String
+  draft_token String   @default(uuid())
+  size_bytes  Int?
+  mime_type   String?
+  created_at  DateTime @default(now())
+
+  post_image_post_fk Post @relation(fields: [post_id], references: [id], onDelete: Cascade)
+  user_post_image_fk User @relation(fields: [user_id], references: [id], onDelete: Cascade)
+}
+
+model Comment {
+  id             Int      @id
+  post_id        Int
+  user_id        String   @default(uuid())
+  parent_comment Int?
+  content        String?
+  likes_count    Int      @default(0)
+  created_at     DateTime @default(now())
+
+  user_comment_fk   User           @relation(fields: [user_id], references: [id], onDelete: Cascade)
+  post_comment_fk   Post           @relation(fields: [post_id], references: [id], onDelete: Cascade)
+  comment_parent_fk Comment?       @relation("CommentToComments", fields: [parent_comment], references: [id], onDelete: Cascade)
+  comment_children  Comment[]      @relation("CommentToComments")
+  Comment_like      Comment_like[]
+}
+
+model Comment_like {
+  id         Int      @id
+  user_id    String   @default(uuid())
+  comment_id Int
+  created_at DateTime @default(now())
+
+  comment_like_user_fk    User    @relation(fields: [user_id], references: [id], onDelete: Cascade)
+  comment_like_comment_fk Comment @relation(fields: [comment_id], references: [id], onDelete: Cascade)
+
+  @@index([user_id, comment_id])
+}
+
+// Necessary for Next auth (Modifiable)
+// model User {
+//     id            String    @id @default(cuid())
+//     name          String?
+//     email         String?   @unique
+//     emailVerified DateTime?
+//     image         String?
+//     accounts      Account[]
+//     sessions      Session[]
+//     posts         Post[]
+// }
+
+model User {
+  id              String   @id @default(uuid())
+  username        String   @unique
+  name            String   @default("unknown")
+  email           String   @unique
+  bio             String?
+  profile_image   String   @default("profile.png")
+  google_username String?
+  github_username String?
+  website_url     String?
+  location        String?
+  available_for   String?
+  join_time       DateTime @default(now())
+
+  accounts     Account[]
+  sessions     Session[]
+  posts        Post[]
+  Comment      Comment[]
+  Post_image   Post_image[]
+  followers    Follow[]       @relation("Following")
+  following    Follow[]       @relation("Follower")
+  user_like    Like[]         @relation("UserLikePost")
+  Bookmark     Bookmark[]
+  Notification Notification[]
+  Comment_like Comment_like[]
+}
+
+//Necessary for Next auth (Don't modify)
+
+model Account {
+  id                       String  @id @default(cuid())
+  userId                   String
+  type                     String
+  provider                 String
+  providerAccountId        String
+  refresh_token            String? // @db.Text
+  access_token             String? // @db.Text
+  expires_at               Int?
+  token_type               String?
+  scope                    String?
+  id_token                 String? // @db.Text
+  session_state            String?
+  user                     User    @relation(fields: [userId], references: [id], onDelete: Cascade)
+  refresh_token_expires_in Int?
+
+  @@unique([provider, providerAccountId])
 }
 
 model Session {
-    id           String   @id @default(cuid())
-    sessionToken String   @unique
-    userId       String
-    expires      DateTime
-    user         User     @relation(fields: [userId], references: [id], onDelete: Cascade)
-}
-
-model User {
-    id            String    @id @default(cuid())
-    name          String?
-    email         String?   @unique
-    emailVerified DateTime?
-    image         String?
-    accounts      Account[]
-    sessions      Session[]
-    posts         Post[]
+  id           String   @id @default(cuid())
+  sessionToken String   @unique
+  userId       String
+  expires      DateTime
+  user         User     @relation(fields: [userId], references: [id], onDelete: Cascade)
 }
 
 model VerificationToken {
-    identifier String
-    token      String   @unique
-    expires    DateTime
+  identifier String
+  token      String   @unique
+  expires    DateTime
 
-    @@unique([identifier, token])
+  @@unique([identifier, token])
 }
