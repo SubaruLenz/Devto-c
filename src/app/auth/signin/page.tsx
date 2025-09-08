@@ -45,7 +45,7 @@ export default function SignIn() {
           
           <div className="space-y-3">
             <button 
-              onClick={() => signIn("google")}
+              onClick={() => signIn("google", { callbackUrl: "/" })}
               className="w-full flex items-center justify-center gap-3 border border-gray-300 rounded-md px-4 py-3 hover:bg-gray-50"
             >
               <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 32 32" className="w-5 h-5 fill-gray-600">
@@ -55,7 +55,7 @@ export default function SignIn() {
             </button>
             
             <button 
-              onClick={() => signIn("github")}
+              onClick={() => signIn("github", { callbackUrl: "/" })}
               className="w-full flex items-center justify-center gap-3 border border-gray-300 rounded-md px-4 py-3 hover:bg-gray-50"
             >
               <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 32 32" className="w-5 h-5 fill-gray-600">
