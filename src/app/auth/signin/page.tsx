@@ -33,7 +33,7 @@ export default function SignIn() {
           </div>
 
           <p className="text-center text-xs text-gray-500 mt-6">
-            Don't have an account?
+            Don&apos;t have an account?
             <a href="#" className="text-blue-600 hover:underline text-sm ml-1">Sign up</a>
           </p>
         </div>
