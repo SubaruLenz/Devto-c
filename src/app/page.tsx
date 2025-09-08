@@ -1,4 +1,5 @@
 import Link from "next/link";
+import { redirect } from "next/navigation";
 
 import { LatestPost } from "~/app/_components/post";
 import { auth, signIn, signOut } from "~/server/auth";
@@ -55,7 +56,7 @@ export default async function Home() {
               {session ? (
                 <form action={async () => {
                   "use server";
-                  await signOut();
+                  redirect("/auth/signout");
                 }}>
                   <button className="rounded-full bg-white/10 px-10 py-3 font-semibold transition hover:bg-white/20">
                     Sign out
