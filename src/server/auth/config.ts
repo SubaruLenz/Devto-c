@@ -33,8 +33,14 @@ declare module "next-auth" {
  */
 export const authConfig = {
   providers: [
-    GoogleProvider,
-    GitHubProvider,
+    GoogleProvider({
+      clientId: process.env.AUTH_GOOGLE_ID!,
+      clientSecret: process.env.AUTH_GOOGLE_SECRET!,
+    }),
+    GitHubProvider({
+      clientId: process.env.AUTH_GITHUB_ID!,
+      clientSecret: process.env.AUTH_GITHUB_SECRET!,
+    }),
     /**
      * ...add more providers here.
      *
@@ -45,7 +51,14 @@ export const authConfig = {
      * @see https://next-auth.js.org/providers/github
      */
   ],
+  pages: {
+    signIn: "/auth/signin",
+    signOut: "/auth/signout"
+  },
   adapter: PrismaAdapter(db),
+  trustHost: true,
+  secret: process.env.AUTH_SECRET,
+  useSecureCookies: process.env.NODE_ENV === "production",
   callbacks: {
     session: ({ session, user }) => ({
       ...session,
