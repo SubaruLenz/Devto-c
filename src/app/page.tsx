@@ -2,7 +2,7 @@ import Link from "next/link";
 import { redirect } from "next/navigation";
 
 import { LatestPost } from "~/app/_components/post";
-import { auth, signIn, signOut } from "~/server/auth";
+import { auth, signIn } from "~/server/auth";
 import { api, HydrateClient } from "~/trpc/server";
 
 export default async function Home() {
