@@ -12,7 +12,10 @@ export default function SignOut() {
         </p>
         
         <div className="flex justify-center">
-          <button className="bg-[#3b49df] px-3 py-3 text-center text-white rounded-md hover:bg-blue-700">
+          <button 
+            onClick={() => signOut({ callbackUrl: "/" })}
+            className="bg-[#3b49df] px-3 py-3 text-center text-white rounded-md hover:bg-blue-700"
+          >
             Yes, sign out
           </button>
         </div>
