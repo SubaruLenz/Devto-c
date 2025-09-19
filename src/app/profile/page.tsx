@@ -1,4 +1,5 @@
 import { redirect } from "next/navigation";
+import Image from "next/image";
 import { auth } from "~/server/auth";
 import { api } from "~/trpc/server";
 
@@ -29,9 +30,11 @@ export default async function ProfilePage() {
               <button className="px-4 py-2 text-sm border rounded-md hover:bg-gray-50">
                 Write
               </button>
-              <img 
-                src={session.user.image || `https://ui-avatars.com/api/?name=${encodeURIComponent(session.user.name || 'User')}&background=6366f1&color=fff`}
+              <Image 
+                src={session.user.image ?? `https://ui-avatars.com/api/?name=${encodeURIComponent(session.user.name ?? 'User')}&background=6366f1&color=fff`}
                 alt="Profile"
+                width={32}
+                height={32}
                 className="w-8 h-8 rounded-full"
               />
             </div>
@@ -46,10 +49,10 @@ export default async function ProfilePage() {
       
       {/* Avatar positioned in middle of background */}
       <div className="relative -mb-0 flex justify-center">
-        <img
-          src={session.user.image || `https://ui-avatars.com/api/?name=${encodeURIComponent(session.user.name || 'User')}&background=6366f1&color=fff`}
-          width="128"
-          height="128"
+        <Image
+          src={session.user.image ?? `https://ui-avatars.com/api/?name=${encodeURIComponent(session.user.name ?? 'User')}&background=6366f1&color=fff`}
+          width={128}
+          height={128}
           alt={`${session.user.name} profile picture`}
           className="w-32 h-32 rounded-full border-8 shadow-lg relative z-10"
           style={{borderColor: '#3440c4'}}

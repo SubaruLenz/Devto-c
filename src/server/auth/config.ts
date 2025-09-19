@@ -63,7 +63,7 @@ export const authConfig = {
       if (account?.provider === "google" && profile?.picture && !user.image) {
         await db.user.update({
           where: { id: user.id },
-          data: { profile_image: profile.picture },
+          data: { profile_image: profile.picture as string },
         });
       }
       return true;
@@ -73,7 +73,7 @@ export const authConfig = {
       user: {
         ...session.user,
         id: user.id,
-        image: user.profile_image || session.user.image,
+        image: user.profile_image ?? session.user.image,
       },
     }),
   },

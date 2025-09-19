@@ -1,15 +1,18 @@
 "use client";
 
 import { signIn } from "next-auth/react";
+import Image from "next/image";
 
 export default function SignIn() {
   return (
     <div className="flex min-h-screen items-center justify-center">
       <div className="w-full max-w-xl p-8">
         <div className="flex flex-col items-center justify-center mb-8">
-          <img 
+          <Image 
             src="https://d2fltix0v2e0sb.cloudfront.net/dev-badge.svg" 
             alt="DEV" 
+            width={48}
+            height={48}
             className="h-12"
           />
           <label className="text-black mt-3 text-2xl font-bold ">Join the DEV Community </label>
@@ -23,7 +26,7 @@ export default function SignIn() {
             onClick={() => signIn("google", { callbackUrl: "/" })}
             className="w-full flex items-center justify-center gap-3 border border-gray-300 rounded-md px-4 py-3 hover:bg-gray-50"
           >
-            <img src="https://cdn.jsdelivr.net/gh/devicons/devicon/icons/google/google-original.svg" alt="Google" className="w-5 h-5" />
+            <Image src="https://cdn.jsdelivr.net/gh/devicons/devicon/icons/google/google-original.svg" alt="Google" width={20} height={20} className="w-5 h-5" />
             Continue with Google
           </button>
           
@@ -31,7 +34,7 @@ export default function SignIn() {
             onClick={() => signIn("github", { callbackUrl: "/" })}
             className="w-full flex items-center justify-center gap-3 border border-gray-300 rounded-md px-4 py-3 hover:bg-gray-50"
           >
-            <img src="https://cdn.jsdelivr.net/gh/devicons/devicon/icons/github/github-original.svg" alt="GitHub" className="w-5 h-5" />
+            <Image src="https://cdn.jsdelivr.net/gh/devicons/devicon/icons/github/github-original.svg" alt="GitHub" width={20} height={20} className="w-5 h-5" />
             Continue with GitHub
           </button>
         </div>
