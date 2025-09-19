@@ -28,6 +28,10 @@ const config = {
         protocol: 'https',
         hostname: 'cdn.jsdelivr.net',
       },
+      {
+        protocol: 'https',
+        hostname: 'media2.dev.to',
+      },
     ],
   },
 };
