@@ -75,7 +75,17 @@ export default async function Home() {
             </div>
           </div>
 
-          {session?.user && <LatestPost />}
+          {session?.user && (
+            <div className="flex flex-col items-center gap-4">
+              <Link
+                href="/profile"
+                className="rounded-full bg-white/10 px-10 py-3 font-semibold transition hover:bg-white/20"
+              >
+                View Profile
+              </Link>
+              <LatestPost />
+            </div>
+          )}
         </div>
       </main>
     </HydrateClient>
