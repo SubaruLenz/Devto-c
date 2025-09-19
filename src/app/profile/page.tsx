@@ -42,49 +42,51 @@ export default async function ProfilePage() {
         </div>
       </header>
       
-      {/* Full-width background section */}
-      <div className="h-40 w-full" style={{backgroundColor: '#3440c4'}}></div>
+      {/* Background section */}
+      <div className="h-36 w-full bg-blue-600"></div>
       
-      <div className="max-w-5xl mx-auto -mt-0 pt-0 px-4">
-      
-      {/* Avatar positioned in middle of background */}
-      <div className="relative -mb-0 flex justify-center">
-        <Image
-          src={session.user.image ?? `https://ui-avatars.com/api/?name=${encodeURIComponent(session.user.name ?? 'User')}&background=6366f1&color=fff`}
-          width={128}
-          height={128}
-          alt={`${session.user.name} profile picture`}
-          className="w-32 h-32 rounded-full border-8 shadow-lg relative z-10"
-          style={{borderColor: '#3440c4'}}
-        />
-      </div>
-
-      {/* Profile card overlapping background */}
-      <section className="bg-white rounded-lg shadow-sm -mt-16 pt-0">
-        <div className="flex justify-end px-6 pt-2">
-          <button className="px-4 py-2 bg-blue-600 text-white rounded-md hover:bg-blue-700 transition-colors">
-            Edit profile
-          </button>
-        </div>
-        <div className="px-6 pb-6">
-          <div className="flex flex-col items-center text-center">
-            <h1 className="text-3xl font-bold text-gray-900 mb-2">
-              {session.user.name}
-            </h1>
-            <p className="text-base text-gray-600 mb-4">
-              {session.user.email}
-            </p>
-            <div className="flex items-center gap-2 text-sm text-gray-500">
-              <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" className="w-5 h-5">
-                <path d="M8 6v3.999h3V6h2v3.999h3V6h2v3.999L19 10a3 3 0 012.995 2.824L22 13v1c0 1.014-.377 1.94-.999 2.645L21 21a1 1 0 01-1 1H4a1 1 0 01-1-1v-4.36a4.025 4.025 0 01-.972-2.182l-.022-.253L2 14v-1a3 3 0 012.824-2.995L5 10l1-.001V6h2zm11 6H5a1 1 0 00-.993.883L4 13v.971l.003.147a2 2 0 003.303 1.4c.363-.312.602-.744.674-1.218l.015-.153.005-.176c.036-1.248 1.827-1.293 1.989-.134l.01.134.004.147a2 2 0 003.992.031l.012-.282c.124-1.156 1.862-1.156 1.986 0l.012.282a2 2 0 003.99 0L20 14v-1a1 1 0 00-.883-.993L19 12zM7 1c1.32.871 1.663 2.088 1.449 2.888a1.5 1.5 0 11-2.898-.776C5.85 2.002 7 2.5 7 1zm5 0c1.32.871 1.663 2.088 1.449 2.888a1.5 1.5 0 01-2.898-.776C10.85 2.002 12 2.5 12 1zm5 0c1.32.871 1.663 2.088 1.449 2.888a1.5 1.5 0 01-2.898-.776C15.85 2.002 17 2.5 17 1z" fill="currentColor"></path>
-              </svg>
-              <span>
-                Joined on {new Date().toLocaleDateString('en-US', { year: 'numeric', month: 'short', day: 'numeric' })}
-              </span>
+      <div className="max-w-5xl mx-auto px-4 relative">
+        {/* Profile card overlapping background */}
+        <div className="bg-white rounded-xl -mt-16 relative z-10">
+          {/* Profile image overlapping card */}
+          <div className="absolute -top-16 left-1/2 transform -translate-x-1/2">
+            <Image
+              src={session.user.image ?? `https://ui-avatars.com/api/?name=${encodeURIComponent(session.user.name ?? 'User')}&background=6366f1&color=fff`}
+              width={128}
+              height={128}
+              alt={`${session.user.name} profile picture`}
+              className="w-32 h-32 rounded-full border-8 border-blue-600"
+            />
+          </div>
+          
+          {/* Edit button positioned on right */}
+          <div className="absolute top-6 right-6">
+            <button className="px-4 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700 transition-colors text-sm">
+              Edit Profile
+            </button>
+          </div>
+          
+          {/* Card content */}
+          <div className="pt-20 pb-8 px-8">
+            <div className="text-center">
+              <h1 className="text-3xl font-bold text-gray-900 mb-2">
+                {session.user.name}
+              </h1>
+              <p className="text-gray-600 mb-6">
+                {session.user.email}
+              </p>
+              
+              <div className="flex justify-center items-center gap-2 text-sm text-gray-500">
+                <svg className="w-4 h-4" fill="currentColor" viewBox="0 0 20 20">
+                  <path fillRule="evenodd" d="M6 2a1 1 0 00-1 1v1H4a2 2 0 00-2 2v10a2 2 0 002 2h12a2 2 0 002-2V6a2 2 0 00-2-2h-1V3a1 1 0 10-2 0v1H7V3a1 1 0 00-1-1zm0 5a1 1 0 000 2h8a1 1 0 100-2H6z" clipRule="evenodd" />
+                </svg>
+                <span>
+                  Joined {new Date().toLocaleDateString('en-US', { year: 'numeric', month: 'short', day: 'numeric' })}
+                </span>
+              </div>
             </div>
           </div>
         </div>
-      </section>
 
       {userPosts.length > 0 && (
         <div className="mt-8">
