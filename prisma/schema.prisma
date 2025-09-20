@@ -31,7 +31,7 @@ model User {
   name            String?
   email           String?   @unique
   emailVerified   DateTime?
-  profile_image   String?
+  image           String?
   google_username String?
   github_username String?
   website_url     String?
