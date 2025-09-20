@@ -20,10 +20,9 @@ declare module "next-auth" {
     } & DefaultSession["user"];
   }
 
-  // interface User {
-  //   // ...other properties
-  //   // role: UserRole;
-  // }
+  interface User {
+    profile_image?: string | null;
+  }
 }
 
 /**
@@ -60,11 +59,21 @@ export const authConfig = {
   secret: process.env.AUTH_SECRET,
   useSecureCookies: process.env.NODE_ENV === "production",
   callbacks: {
+    signIn: async ({ user, account, profile }) => {
+      if (account?.provider === "google" && profile?.picture && !user.image) {
+        await db.user.update({
+          where: { id: user.id },
+          data: { profile_image: profile.picture as string },
+        });
+      }
+      return true;
+    },
     session: ({ session, user }) => ({
       ...session,
       user: {
         ...session.user,
         id: user.id,
+        image: user.profile_image ?? session.user.image,
       },
     }),
   },
