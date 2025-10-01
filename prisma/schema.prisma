@@ -30,8 +30,11 @@ model User {
   id              String    @id @default(cuid())
   name            String?
   email           String?   @unique
+  email_display   Boolean   @default(false)
   emailVerified   DateTime?
+  bio             String?
   image           String?
+  username        String?   @unique
   google_username String?
   github_username String?
   website_url     String?
