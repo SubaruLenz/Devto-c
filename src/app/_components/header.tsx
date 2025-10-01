@@ -1,6 +1,7 @@
 import Link from "next/link"
 import Image from "next/image"
 import { auth, signIn } from "~/server/auth"
+import { ProfileDropdown } from "./headerDropdown"
 
 export async function Header() {
   const session = await auth();
@@ -61,15 +62,7 @@ export async function Header() {
                   </svg>
                 </a>
                 
-                <Link href="/profile" className="p-1 hover:bg-gray-100 rounded-full">
-                  <Image 
-                    src={session.user.image ?? `https://ui-avatars.com/api/?name=${encodeURIComponent(session.user.name ?? 'User')}&background=6366f1&color=fff`}
-                    alt="Profile"
-                    width={32}
-                    height={32}
-                    className="w-8 h-8 rounded-full"
-                  />
-                </Link>
+                <ProfileDropdown user={session.user} />
               </>
             ) : (
               <>
