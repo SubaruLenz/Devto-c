@@ -47,7 +47,7 @@ export default async function ProfilePage() {
                 {session.user.name}
               </h1>
               <p className="text-gray-600 mb-6">
-                {userProfile?.bio || "404 bio not found"}
+                {userProfile?.bio ?? "404 bio not found"}
               </p>
               
               <div className="flex justify-center items-center gap-6 text-sm text-gray-500">

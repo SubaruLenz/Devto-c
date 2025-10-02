@@ -88,7 +88,7 @@ export function ProfileDropdown({ user }: ProfileDropdownProps) {
             <button
               onClick={() => {
                 setIsOpen(false);
-                signOut();
+                void signOut();
               }}
               className="flex items-center w-full px-3 py-2 text-sm text-gray-700 hover:bg-blue-50 hover:underline rounded-md"
             >

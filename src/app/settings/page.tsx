@@ -4,8 +4,6 @@ import { redirect } from "next/navigation";
 import { useSession } from "next-auth/react";
 import { useState } from "react";
 import { api } from "~/trpc/react";
-import Link from "next/link";
-import Image from "next/image";
 
 export default function SettingsPage() {
   const { data: session, status } = useSession();
@@ -126,7 +124,7 @@ export default function SettingsPage() {
               </div>
             )}
 
-            <h1 className="text-3xl font-bold text-gray-900 mb-4">@{profile?.username || "username"}</h1>
+            <h1 className="text-3xl font-bold text-gray-900 mb-4">@{profile?.username ?? "username"}</h1>
             
             <form onSubmit={handleSubmit}>
               <div className="bg-white rounded-md border border-gray-200">

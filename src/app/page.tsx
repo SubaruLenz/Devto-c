@@ -1,6 +1,5 @@
 import Link from "next/link";
 import { redirect } from "next/navigation";
-import Image from "next/image";
 
 import { LatestPost } from "~/app/_components/post";
 import { auth, signIn } from "~/server/auth";

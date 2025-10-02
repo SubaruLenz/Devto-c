@@ -1,11 +1,8 @@
 "use client";
 
 import { signOut, useSession } from "next-auth/react";
-import Link from "next/link";
-import Image from "next/image";
 
 export default function SignOut() {
-  const { data: session } = useSession();
   
   return (
     <div className="min-h-screen" style={{backgroundColor: '#f6f6f6'}}>
